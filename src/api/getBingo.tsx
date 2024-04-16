@@ -1,5 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import { useQuery } from 'react-query'
+import { useCreateTodaysBingo } from "./createBingo";
 
 const getMainCards = async (): Promise<Array<any>> => {
   const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
@@ -10,8 +11,11 @@ const getMainCards = async (): Promise<Array<any>> => {
       .from("bingo").select("*")
       
 
-    if (data === null) {
-      return [];
+    if (Array.isArray(data) && data.length === 0) {
+        console.log("date to null")
+        const data = useCreateTodaysBingo()
+        console.log(data)
+      return data;
     }
     console.log("jestdata")
     console.log(data)
@@ -29,3 +33,7 @@ export const useGetMaincards = () => {
     queryFn: getMainCards,
   });
 };
+function createTodaysBingo() {
+    throw new Error("Function not implemented.");
+}
+

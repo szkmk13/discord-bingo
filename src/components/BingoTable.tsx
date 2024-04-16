@@ -3,64 +3,21 @@ import CryptoJS from "crypto-js";
 import { Modal } from "@mui/base/Modal";
 import { useState } from "react";
 import { useGetMaincards } from "../api/getBingo";
+import { useCreateTodaysBingo } from "../api/createBingo";
+import useFetchAndPost from "../api/getOrCreateBingo";
+// import useFetchAndPost from "../api/2";
+import CardData from "../types/bingo"
 
-interface CardData {
-  marked: boolean;
-  phrase: string;
-}
 function BingoTable() {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const cardsData = [
-    { marked: true, phrase: "dzięki za dzisiaj" },
-    { marked: false, phrase: "... tirem" },
-    { marked: true, phrase: "fomo" },
-    { marked: false, phrase: "loldle" },
-    { marked: false, phrase: "pokedle" },
-    { marked: true, phrase: "stop cham" },
-    { marked: false, phrase: "tft" },
-    { marked: true, phrase: "wyslane cv" },
-    { marked: false, phrase: "jolie jolie" },
-    { marked: false, phrase: "classcat" },
-    { marked: false, phrase: "larox barman" },
-    { marked: true, phrase: "kosa szymek-daniel" },
-    { marked: true, phrase: "[Object object]" },
-    { marked: false, phrase: "stylowanie buttona" },
-    { marked: false, phrase: "pisanie endpointow" },
-    { marked: false, phrase: "daniel wejdzie na disc" },
-  ];
 
-  const { data, isLoading, error } = useGetMaincards();
+
+  const { data:todaysBingo, isLoading, isError, postEmptyData } = useFetchAndPost();
+  console.log(todaysBingo,isLoading,isError,postEmptyData);
   // console.log(data)
-
-  function shuffleListWithHash(list: Array<CardData>, hash: string) {
-    // Convert the hash to a number
-    const hashNumber = parseInt(
-      CryptoJS.SHA256(hash).toString().substring(0, 8),
-      16
-    );
-
-    // Seed the random number generator with the hash number
-    const seededRandom = seededRandomGenerator(hashNumber);
-
-    // Shuffle the list using the seeded random number generator
-    for (let i = list.length - 1; i > 0; i--) {
-      const j = Math.floor(seededRandom() * (i + 1));
-      [list[i], list[j]] = [list[j], list[i]];
-    }
-
-    return list;
-  }
-  // Seeded random number generator
-  function seededRandomGenerator(seed: number) {
-    let seedValue = seed;
-    return function () {
-      const x = Math.sin(seedValue++) * 10000;
-      return x - Math.floor(x);
-    };
-  }
   function checkWinCondition(list: Array<CardData>) {
     let marked_counter = 0;
     const possibleWins = [
@@ -90,18 +47,14 @@ function BingoTable() {
     return false;
   }
 
-  // Example usage
-  const hash = "fsda";
-  const shuffledList = shuffleListWithHash(cardsData, hash);
 
-  const responseData = {
-    cardsData: shuffledList,
-    date: "test123",
-  };
-
-  const winForToday = { win: checkWinCondition(shuffledList) };
-  const newResponseData = Object.assign({}, responseData, winForToday);
-  console.log(newResponseData);
+  if (isLoading){
+    return <></>
+  }
+  if (isError){
+    return <></>
+  }
+  const bingoList: Array<CardData> = todaysBingo[0].bingo
 
   return (
     <>
@@ -114,7 +67,7 @@ function BingoTable() {
         <p>Text in a modal</p>
       </Modal>
       <div className="grid grid-cols-4 gap-4 h-96">
-        {shuffledList.map((data, index) => (
+        {bingoList.map((data, index) => (
           <BingoCard
             key={`disc${index}`}
             marked={data.marked}
