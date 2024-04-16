@@ -2,7 +2,7 @@ import { createClient } from "@supabase/supabase-js";
 import { useQuery } from 'react-query'
 
 const getMainCards = async (): Promise<Array<any>> => {
-  const supabaseUrl = "https://wfqgozjhucuhujgvxqnp.supabase.co";
+  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
   const supabaseKey = import.meta.env.VITE_SUPABASE_KEY;
   const supabase = createClient(supabaseUrl, supabaseKey);
   try {
