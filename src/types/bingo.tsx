@@ -1,5 +1,5 @@
 interface CardData {
-  marked: boolean;
+  supabase_key: string;
   phrase: string;
 }
 

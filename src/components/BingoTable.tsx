@@ -1,23 +1,16 @@
 import BingoCard from "./BingoCard";
-import CryptoJS from "crypto-js";
-import { Modal } from "@mui/base/Modal";
-import { useState } from "react";
-import { useGetMaincards } from "../api/getBingo";
-import { useCreateTodaysBingo } from "../api/createBingo";
-import useFetchAndPost from "../api/getOrCreateBingo";
-// import useFetchAndPost from "../api/2";
-import CardData from "../types/bingo"
+import moment from "moment";
+
+const currentDate = moment().format("MM/DD/YYYY");
+import CardData from "../types/bingo";
+import { useGetBingo } from "../api/getBingo";
+import { shuffleListWithHash } from "../utils/shuffleList";
+import { cardsDataConstants } from "../constants/cardsData";
+const shuffledList = shuffleListWithHash(cardsDataConstants, currentDate);
 
 function BingoTable() {
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const { data: todaysBingo, isLoading, isError } = useGetBingo();
 
-
-
-  const { data:todaysBingo, isLoading, isError, postEmptyData } = useFetchAndPost();
-  console.log(todaysBingo,isLoading,isError,postEmptyData);
-  // console.log(data)
   function checkWinCondition(list: Array<CardData>) {
     let marked_counter = 0;
     const possibleWins = [
@@ -47,36 +40,28 @@ function BingoTable() {
     return false;
   }
 
-
-  if (isLoading){
-    return <></>
+  if (isLoading) {
+    return <></>;
   }
-  if (isError){
-    return <></>
+  if (isError) {
+    return <></>;
   }
-  const bingoList: Array<CardData> = todaysBingo[0].bingo
-
-  return (
-    <>
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <p>Text in a modal</p>
-      </Modal>
-      <div className="grid grid-cols-4 gap-4 h-96">
-        {bingoList.map((data, index) => (
-          <BingoCard
-            key={`disc${index}`}
-            marked={data.marked}
-            phrase={data.phrase}
-          />
-        ))}
-      </div>
-    </>
-  );
+  if (todaysBingo) {
+    return (
+      <>
+        <div className="grid grid-cols-4 gap-4 h-96">
+          {shuffledList.map((data, index) => (
+            <BingoCard
+              key={`disc${index}`}
+              marked={todaysBingo[data.supabase_key]}
+              phrase={data.phrase}
+              supabase_key={data.supabase_key}
+            />
+          ))}
+        </div>
+      </>
+    );
+  }
 }
 
 export default BingoTable;

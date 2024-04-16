@@ -1,39 +1,33 @@
-import { createClient } from "@supabase/supabase-js";
-import { useQuery } from 'react-query'
-import { useCreateTodaysBingo } from "./createBingo";
+import { useQuery } from "react-query";
+import { supabase } from "../utils/supabase";
+import moment from "moment";
 
-const getMainCards = async (): Promise<Array<any>> => {
-  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-  const supabaseKey = import.meta.env.VITE_SUPABASE_KEY;
-  const supabase = createClient(supabaseUrl, supabaseKey);
-  try {
-    const { data } = await supabase
-      .from("bingo").select("*")
-      
+const currentDate = moment().format("MM/DD/YYYY");
+const fetchSupa = async () => {
+  const { data } = await supabase
+    .from("bingo")
+    .select("*")
+    .eq("date", currentDate);
+  return data;
+};
+const getBingo = async () => {
+  const data = await fetchSupa();
 
-    if (Array.isArray(data) && data.length === 0) {
-        console.log("date to null")
-        const data = useCreateTodaysBingo()
-        console.log(data)
-      return data;
-    }
-    console.log("jestdata")
-    console.log(data)
-
-    return data.json();
-  } catch (error: any) {
-    console.error("Error fetching maincards:", error);
-    return [];
+  if (data === undefined || data.length == 0) {
+    console.log("dupa");
+    const response = await supabase.from("bingo").insert({ date: currentDate });
+    return response[0];
   }
+  
+
+  return data[0];
 };
 
-export const useGetMaincards = () => {
+export const useGetBingo = () => {
   return useQuery({
-    queryKey: "maincards-data",
-    queryFn: getMainCards,
+    queryKey: ["get-bingo"],
+    queryFn: getBingo,
+    refetchOnWindowFocus: false,
+    retry: 0,
   });
 };
-function createTodaysBingo() {
-    throw new Error("Function not implemented.");
-}
-

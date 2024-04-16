@@ -1,16 +1,29 @@
 import { useState } from "react";
+import { createClient } from "@supabase/supabase-js";
 
-interface CardData {
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseKey = import.meta.env.VITE_SUPABASE_KEY;
+const supabase = createClient(supabaseUrl, supabaseKey);
+
+interface BingoCard {
+  supabase_key: string;
   marked: boolean;
   phrase: string;
 }
 
-function BingoCard(data: CardData) {
+function BingoCard(data: BingoCard) {
   const [color, setColor] = useState(data.marked);
+  const currentDate = "04/16/2024";
+  const handleClick = async () => {
 
-  const handleClick = () => {
-    setColor(!color);
-    // setColor(true);
+    setColor(true);
+    const { error } = await supabase
+      .from("bingo")
+      .update({ [data.supabase_key]: true })
+      .eq("date", currentDate);
+    if (error) {
+      console.log(error);
+    }
     // todo send request with update to set as done
   };
 

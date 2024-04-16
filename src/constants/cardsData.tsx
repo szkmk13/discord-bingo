@@ -1,0 +1,18 @@
+export const cardsDataConstants = [
+    { supabase_key: "dzieki_za_dzisiaj", phrase: "dzięki za dzisiaj" },
+    { supabase_key: "tirem", phrase: "... tirem" },
+    { supabase_key: "fomo", phrase: "fomo" },
+    { supabase_key: "loldle", phrase: "loldle" },
+    { supabase_key: "pokedle", phrase: "pokedle" },
+    { supabase_key: "stop_cham", phrase: "stop cham" },
+    { supabase_key: "tft", phrase: "tft" },
+    { supabase_key: "cv", phrase: "wyslane cv" },
+    { supabase_key: "jolie", phrase: "jolie jolie" },
+    { supabase_key: "classcat", phrase: "classcat" },
+    { supabase_key: "krecimy", phrase: "... kręcimy" },
+    { supabase_key: "kosa", phrase: "kosa szymek-daniel" },
+    { supabase_key: "object_object", phrase: "[Object object]" },
+    { supabase_key: "stylowanie_buttona", phrase: "stylowanie buttona" },
+    { supabase_key: "pisanie_endpointow", phrase: "pisanie endpointow" },
+    { supabase_key: "daniel_disc", phrase: "daniel wejdzie na disc" },
+  ];
