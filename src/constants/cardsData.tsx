@@ -18,7 +18,7 @@ export const supabaseToPhraseDict:bingoRow = {
   "pisanie_endpointow": "pisanie endpointow",
   "daniel_disc": "daniel wejdzie na disc"
 };
-export const supabaseKeys = [
+export const supabaseKeys:Array<string> = [
   "dzieki_za_dzisiaj",
   "tirem",
   "fomo",

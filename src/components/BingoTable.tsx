@@ -44,11 +44,14 @@ function BingoTable() {
   if (todaysBingo) {
     const todaysOrder = todaysBingo.order;
     console.log(todaysBingo);
-    console.log(checkWinCondition(todaysOrder,todaysBingo));
+    const hasWon = checkWinCondition(todaysOrder,todaysBingo)
+    console.log(hasWon);
+    
     
     return (
       <>
-        <div className="grid grid-cols-4 gap-4 h-96">
+        {hasWon?<>Gratulacje wygrałeś</>:<></>}
+        <div className="grid grid-cols-4 gap-4 h-96 ">
           {todaysOrder.map((actionString:string) => (
             <BingoCard
               key={actionString}
