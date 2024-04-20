@@ -7,32 +7,47 @@ import databaseBingoRow from "../types/databaseBingoRow";
 
 const currentDate = moment().format("MM/DD/YYYY");
 const fetchSupa = async (): Promise<databaseBingoRow[] | undefined | null> => {
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from("bingo")
     .select("*")
     .eq("date", currentDate);
+
+  if (error) {
+    console.error("Error fetching data from Supabase:", error);
+    return null;
+  }
+
   return data;
 };
 
-const getBingo = async () => {
+const getBingo = async (): Promise<databaseBingoRow | undefined> => {
   const data = await fetchSupa();
 
-  if (data === undefined || data.length == 0) {
-    console.log("sending");
+  if (!data || data.length === 0) {
+    console.log("No data found, inserting new entry");
+
     const todaysOrder = shuffleListWithHash(supabaseKeys, currentDate);
-    await supabase
+    const { error } = await supabase
       .from("bingo")
       .insert({ date: currentDate, order: todaysOrder });
-    const data = await fetchSupa();
 
-    return data[0];
+    if (error) {
+      console.error("Error inserting new entry into Supabase:", error);
+      return undefined;
+    }
+    const newData = await fetchSupa();
+    if (!newData || newData.length === 0) {
+      console.error("Something wet wrong");
+      return undefined;
+    }
+    return newData[0];
   }
 
   return data[0];
 };
 
 export const useGetBingo = () => {
-  return useQuery({
+  return useQuery<databaseBingoRow | undefined>({
     queryKey: ["get-bingo"],
     queryFn: getBingo,
     refetchOnWindowFocus: false,
