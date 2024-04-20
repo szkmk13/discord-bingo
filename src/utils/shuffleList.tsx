@@ -1,13 +1,7 @@
 import CryptoJS from "crypto-js";
-import moment from "moment";
 
-const currentDate = moment().format("MM/DD/YYYY");
-import CardData from "../types/bingo";
-import { cardsDataConstants } from "../constants/cardsData";
 
-const constats = cardsDataConstants
-
-export function shuffleListWithHash(list: Array<CardData>, hash: string) {
+export function shuffleListWithHash(list: Array<string>, hash: string) {
     // Convert the hash to a number
     const hashNumber = parseInt(
       CryptoJS.SHA256(hash).toString().substring(0, 8),

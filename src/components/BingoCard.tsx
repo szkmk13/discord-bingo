@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { createClient } from "@supabase/supabase-js";
+import { supabase } from "../utils/supabase";
+import moment from "moment";
+import { useMutation, useQueryClient } from "react-query";
+const currentDate = moment().format("MM/DD/YYYY");   
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseKey = import.meta.env.VITE_SUPABASE_KEY;
-const supabase = createClient(supabaseUrl, supabaseKey);
 
 interface BingoCard {
   supabase_key: string;
@@ -12,19 +12,28 @@ interface BingoCard {
 }
 
 function BingoCard(data: BingoCard) {
-  const [color, setColor] = useState(data.marked);
-  const currentDate = "04/16/2024";
-  const handleClick = async () => {
-
-    setColor(true);
-    const { error } = await supabase
+  const [color,setColor] = useState(data.marked);
+  const queryClient = useQueryClient()
+  const mutation = useMutation(
+    async () => {
+      const { error } = await supabase
       .from("bingo")
       .update({ [data.supabase_key]: true })
       .eq("date", currentDate);
-    if (error) {
-      console.log(error);
-    }
-    // todo send request with update to set as done
+      if (error) {
+        console.log(error);
+      }
+    },
+    {
+    onSuccess() {
+    queryClient.invalidateQueries("get-bingo")
+      
+    },
+  })
+  const handleClick = async () => {
+    console.log("mutaitint");
+    setColor(true)
+    mutation.mutate()
   };
 
   return (

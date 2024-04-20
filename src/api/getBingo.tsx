@@ -1,6 +1,8 @@
 import { useQuery } from "react-query";
 import { supabase } from "../utils/supabase";
 import moment from "moment";
+import { shuffleListWithHash } from "../utils/shuffleList";
+import { supabaseKeys } from "../constants/cardsData";
 
 const currentDate = moment().format("MM/DD/YYYY");
 const fetchSupa = async () => {
@@ -12,10 +14,13 @@ const fetchSupa = async () => {
 };
 const getBingo = async () => {
   const data = await fetchSupa();
-
+  
   if (data === undefined || data.length == 0) {
     console.log("dupa");
-    const response = await supabase.from("bingo").insert({ date: currentDate });
+    const todaysOrder =  shuffleListWithHash(supabaseKeys,currentDate)
+    
+    const response = await supabase.from("bingo").insert({ date: currentDate,order:todaysOrder });
+    
     return response[0];
   }
   

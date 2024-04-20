@@ -1,4 +1,3 @@
-import React, { useState, useEffect } from 'react';
 import CryptoJS from 'crypto-js';
 
 

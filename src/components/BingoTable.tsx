@@ -1,17 +1,13 @@
 import BingoCard from "./BingoCard";
-import moment from "moment";
 
-const currentDate = moment().format("MM/DD/YYYY");
-import CardData from "../types/bingo";
 import { useGetBingo } from "../api/getBingo";
-import { shuffleListWithHash } from "../utils/shuffleList";
-import { cardsDataConstants } from "../constants/cardsData";
-const shuffledList = shuffleListWithHash(cardsDataConstants, currentDate);
+import { supabaseToPhraseDict } from "../constants/cardsData";
+import databaseBingoRow from "../types/databaseBingoRow";
 
 function BingoTable() {
   const { data: todaysBingo, isLoading, isError } = useGetBingo();
 
-  function checkWinCondition(list: Array<CardData>) {
+  function checkWinCondition(todaysOrder: Array<string>,todaysBingo:databaseBingoRow) {
     let marked_counter = 0;
     const possibleWins = [
       [0, 4, 8, 12],
@@ -26,8 +22,8 @@ function BingoTable() {
       [3, 6, 9, 12],
     ];
     for (const posiibleWin of possibleWins) {
-      for (const number of posiibleWin) {
-        if (!list[number].marked) {
+      for (const index_from_today of posiibleWin) {
+        if (!todaysBingo[todaysOrder[index_from_today]]) {
           marked_counter = 0;
           break; // Exit the loop early
         }
@@ -39,23 +35,26 @@ function BingoTable() {
     }
     return false;
   }
-
   if (isLoading) {
-    return <></>;
+    return <><div>LOADING</div></>;
   }
   if (isError) {
     return <></>;
   }
   if (todaysBingo) {
+    const todaysOrder = todaysBingo.order;
+    console.log(todaysBingo);
+    console.log(checkWinCondition(todaysOrder,todaysBingo));
+    
     return (
       <>
         <div className="grid grid-cols-4 gap-4 h-96">
-          {shuffledList.map((data, index) => (
+          {todaysOrder.map((actionString:string) => (
             <BingoCard
-              key={`disc${index}`}
-              marked={todaysBingo[data.supabase_key]}
-              phrase={data.phrase}
-              supabase_key={data.supabase_key}
+              key={actionString}
+              marked={todaysBingo[actionString]}
+              phrase={supabaseToPhraseDict[actionString]}
+              supabase_key={actionString}
             />
           ))}
         </div>
