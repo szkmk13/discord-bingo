@@ -1,6 +1,13 @@
+import moment from "moment";
 import databaseBingoRow from "../types/databaseBingoRow";
+import { supabase } from "./supabase";
+const currentDate = moment().format("MM/DD/YYYY");   
 
-export function checkWinCondition(todaysOrder: Array<string>,todaysBingo:databaseBingoRow) {
+export async function checkWinCondition(todaysOrder: Array<string>,todaysBingo:databaseBingoRow) {
+    if (todaysBingo.completed){
+      return 
+    }
+    
     let marked_counter = 0;
     const possibleWins = [
       [0, 4, 8, 12],
@@ -23,6 +30,11 @@ export function checkWinCondition(todaysOrder: Array<string>,todaysBingo:databas
         marked_counter = marked_counter + 1;
       }
       if (marked_counter == 4) {
+        console.log('setting completed');
+        await supabase
+      .from("bingo")
+      .update({ completed: true })
+      .eq("date", currentDate);
         return true;
       }
     }

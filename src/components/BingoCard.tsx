@@ -26,12 +26,14 @@ function BingoCard(data: BingoCard) {
     },
     {
     onSuccess() {
-    queryClient.invalidateQueries("get-bingo")
+    queryClient.invalidateQueries({queryKey:["get-bingo"]})
+    queryClient.invalidateQueries({queryKey:["get-completed"]})
+
+    
       
     },
   })
   const handleClick = async () => {
-    console.log("mutaitint");
     setColor(true)
     mutation.mutate()
   };

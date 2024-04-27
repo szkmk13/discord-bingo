@@ -35,6 +35,7 @@ const getBingo = async (): Promise<databaseBingoRow | undefined> => {
       console.error("Error inserting new entry into Supabase:", error);
       return undefined;
     }
+    
     const newData = await fetchSupa();
     if (!newData || newData.length === 0) {
       console.error("Something wet wrong");
