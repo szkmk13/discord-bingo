@@ -1,20 +1,18 @@
 import BingoCard from "./BingoCard";
 
-import { useGetBingo } from "../api/getBingo";
-import { supabaseToPhraseDict } from "../constants/cardsData";
 import { checkWinCondition } from "../utils/checkWinCondition";
-import { useGetOrder } from "../api/getOreder";
-import { useGetCompleted } from "../api/getCompletedForToday";
-import { useGetStreak } from "../api/getStreak";
 import WinningModal from "./WinningModal";
 import Streak from "./StreakAndDate";
 import { useQueryClient } from "react-query";
 import moment from "moment";
 import Loader from "./Loader";
+import { useGetBingo2 } from "../utils/supabase/order";
+import { useActivitiesWithLabels } from "../utils/supabase/supabase";
 const currentDate = moment().format("DD/MM/YYYY");
 function BingoTable() {
-  const { data: todaysBingo, isLoading, isError } = useGetBingo();
+  const { data: todaysBingo, isLoading, isError } = useGetBingo2(); //hook
   const queryClient = useQueryClient();
+  const { data: possible_fields } = useActivitiesWithLabels();
 
   if (isLoading) {
     return (
@@ -30,8 +28,11 @@ function BingoTable() {
         <div className="grid grid-cols-4 gap-4 h-96 ">
           {Array(16)
             .fill(undefined)
-            .map((un,index) => (
-              <div key={index} className="border-2 rounded-lg bg-gray-400 m-2 flex items-center justify-center cursor-pointer select-none"></div>
+            .map((un, index) => (
+              <div
+                key={index}
+                className="border-2 rounded-lg bg-gray-400 m-2 flex items-center justify-center cursor-pointer select-none"
+              ></div>
             ))}
         </div>
       </>
@@ -40,22 +41,25 @@ function BingoTable() {
   if (isError) {
     return <></>;
   }
-  if (todaysBingo) {
-    checkWinCondition(todaysBingo.order, todaysBingo);
-
+  if (todaysBingo && possible_fields) {
+    const order = todaysBingo.order;
+    const marked = todaysBingo.marked;
     queryClient.invalidateQueries({ queryKey: ["get-streak"] });
-
+    const hasWon = checkWinCondition(todaysBingo);
+    console.log(hasWon);
+    
     return (
       <>
         <Streak />
-        <WinningModal />
+        {hasWon && <WinningModal />}
         <div className="grid grid-cols-4 gap-4 h-96 ">
-          {todaysBingo.order.map((actionString: string) => (
+          {todaysBingo.order.map((activity: string, index: number) => (
             <BingoCard
-              key={actionString}
-              marked={todaysBingo[actionString]}
-              phrase={supabaseToPhraseDict[actionString]}
-              supabase_key={actionString}
+            label = {possible_fields[activity]}
+              activity={activity}
+              activity_index={index}
+              marked={marked[order.indexOf(activity)]}
+              marked_list={marked}
             />
           ))}
         </div>

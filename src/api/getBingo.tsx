@@ -1,5 +1,5 @@
 import { useQuery } from "react-query";
-import { supabase } from "../utils/supabase";
+import { supabase } from "../utils/supabase/supabase";
 import moment from "moment";
 import { shuffleListWithHash } from "../utils/shuffleList";
 import { supabaseKeys } from "../constants/cardsData";
