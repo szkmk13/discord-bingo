@@ -20,9 +20,9 @@ function BingoCard(data: TBingoCard) {
         className={
           color
             ? "border-2 rounded-lg bg-green-400 m-2 flex items-center justify-center cursor-pointer select-none"
-            : "border-2 rounded-lg bg-red-400 m-2 flex items-center justify-center cursor-pointer select-none"
+            : "border-2 rounded-lg bg-red-300 m-2 flex items-center justify-center cursor-pointer select-none"
         }
-        onClick={handleClick}
+        onClick={data.marked?()=>{}:handleClick}
       >
         <p className="text-center text-xl">{data.label}</p>
       </div>

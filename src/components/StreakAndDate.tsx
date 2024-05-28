@@ -8,8 +8,8 @@ function Streak() {
   return (
     <>
       <div className="grid grid-cols-3 gap-4">
-        <div className="text-center text-xl col-span-2 border-2 rounded-lg bg-zinc-400 ">Discord bingo for {currentDate}</div>
-        <div className="text-center text-xl border-2 rounded-lg bg-zinc-200">Current streak🔥: {streak}</div>
+        <div className="text-center text-xl col-span-2 border-2 rounded-lg bg-purple-400 ">Discord bingo for {currentDate}</div>
+        <div className="text-center text-xl border-2 rounded-lg bg-orange-200">Current streak🔥: {streak}</div>
       </div>
     </>
   );

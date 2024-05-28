@@ -4,7 +4,7 @@ import moment from "moment";
 
 const getStreak = async () => {
   const { data, error } = await supabase
-    .from("bingo")
+    .from("bingos")
     .select("completed, date")
     .order("date", { ascending: false });
 

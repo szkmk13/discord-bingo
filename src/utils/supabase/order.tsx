@@ -1,11 +1,11 @@
 import moment from "moment";
 import { useQuery } from "react-query";
 import { supabase } from "./supabase";
-import databaseBingoRow2 from "../../types/databaseBingoRow2";
 import { shuffleListWithHash } from "../shuffleList";
+import { databaseBingoRow } from "../../types/supabase";
 
 const currentDate = moment().format("MM/DD/YYYY");
-const fetchSupa = async (): Promise<Array<databaseBingoRow2> | undefined | null> => {
+const fetchSupa = async (): Promise<Array<databaseBingoRow> | undefined | null> => {
   const { data, error } = await supabase
     .from("bingos")
     .select("*")
@@ -26,7 +26,7 @@ const fetchOrder = async (): Promise<Array<string>> => {
     return [];
   }
   const keys = data.map((element) => element.activity);
-  return keys;
+  return keys.slice(0,24);
 };
 
 export const fetchPossibleFields = async (): Promise<Array<string>> => {
@@ -40,9 +40,8 @@ export const fetchPossibleFields = async (): Promise<Array<string>> => {
   };
 
 
-const getBingo = async (): Promise<databaseBingoRow2 | undefined> => {
+const getBingo = async (): Promise<databaseBingoRow | undefined> => {
   const data = await fetchSupa();
-
   const possible_fields = await fetchOrder();
   if (!data || data.length === 0) {
     console.log("No data found, inserting new entry");
@@ -70,7 +69,7 @@ const getBingo = async (): Promise<databaseBingoRow2 | undefined> => {
 };
 
 export const useGetBingo2 = () => {
-  return useQuery<databaseBingoRow2 | undefined>({
+  return useQuery<databaseBingoRow | undefined>({
     queryKey: ["get-bingo2"],
     queryFn: getBingo,
     refetchOnWindowFocus: false,

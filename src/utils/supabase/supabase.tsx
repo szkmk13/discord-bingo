@@ -1,6 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { ActivityLabel } from "../../types/supa";
+import { ActivityLabel } from "../../types/supabase";
 import { TBingoCard } from "../../types/bingo";
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
@@ -18,7 +18,6 @@ export const useMutationUpdateBingosDatabase = (
     async () => {
       const newList = data.marked_list;
       newList[data.activity_index] = true;
-      console.log(newList);
       const { error } = await supabase
         .from("bingos")
         .update({ marked: newList })
@@ -50,7 +49,6 @@ export const getActivitiesWithLabels = async (): Promise<ActivityLabel> => {
     console.error("Error fetching data from Supabase:", error);
     return {};
   }
-  console.log(data);
   const new_Data: ActivityLabel = {};
   data.map((element) => (new_Data[element.activity] = element.readable));
   return new_Data;

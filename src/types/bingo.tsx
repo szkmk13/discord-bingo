@@ -1,7 +1,3 @@
-export interface CardData {
-  supabase_key: string;
-  phrase: string;
-}
 
 export interface TBingoCard {
   label: string;

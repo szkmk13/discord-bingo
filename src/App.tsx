@@ -5,7 +5,7 @@ const queryClient = new QueryClient();
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="mt-40 container w-3/5 h-auto">
+      <div className="mt-14 container w-3/5 h-auto">
         <BingoTable />
       </div>
     </QueryClientProvider>
