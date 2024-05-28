@@ -1,14 +1,10 @@
-import { ownerDocument } from "@mui/material";
 import { useRef } from "react";
-interface Order {
-  order: boolean[];
-}
-function WinningModal({ order }) {
-  const textRef = useRef();
+
+function WinningModal({ order }:{order:boolean[]}) {
+  const textRef = useRef(null);
 
   const copyToClipboard = () => {
-    const text = textRef.current.innerText;
-    navigator.clipboard.writeText(text).catch((err) => {
+    navigator.clipboard.writeText(textToCopy).catch((err) => {
       console.error("Failed to copy text: ", err);
     });
   };
