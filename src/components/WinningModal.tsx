@@ -1,6 +1,6 @@
 import { useRef } from "react";
 
-function WinningModal({ order }:{order:boolean[]}) {
+function WinningModal({ order }: { order: boolean[] }) {
   const textRef = useRef(null);
 
   const copyToClipboard = () => {

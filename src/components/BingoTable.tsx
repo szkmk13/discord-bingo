@@ -58,7 +58,7 @@ function BingoTable() {
       <>
         <Streak />
         {hasWon && <WinningModal order={marked} />}
-        <div className="grid grid-cols-5 gap-4 h-96 ">
+        <div className="grid grid-cols-5 sm:gap-2 lg:gap-4 h-96 ">
           {order.map((activity: string, index: number) => (
             <BingoCard
               key={index}
