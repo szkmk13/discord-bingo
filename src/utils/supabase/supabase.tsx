@@ -17,7 +17,7 @@ export const useMutationUpdateBingosDatabase = (
   return useMutation(
     async () => {
       const newList = data.marked_list;
-      newList[data.activity_index] = true;
+      newList[data.activity_index] = !data.marked;
       const { error } = await supabase
         .from("bingos")
         .update({ marked: newList })

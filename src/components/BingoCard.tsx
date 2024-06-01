@@ -9,7 +9,7 @@ function BingoCard(data: TBingoCard) {
   const mutation = useMutationUpdateBingosDatabase(data, currentDate);
 
   const handleClick = async () => {
-    setColor(true);
+    setColor(!data.marked);
     mutation.mutate();
   };
 
@@ -20,7 +20,7 @@ function BingoCard(data: TBingoCard) {
         className={`border-2 rounded-lg m-2 flex items-center justify-center cursor-pointer select-none shadow-md min-w-12 min-h-12 sm:h-24 ${
           color ? 'bg-green-400' : 'bg-red-300'
         }`}
-        onClick={data.marked?()=>{}:handleClick}
+        onClick={handleClick}
       >
         <p className="text-center text-sm md:text-lg lg:text-xl text-wrap sm:m-1">{data.label}</p>
       </div>
