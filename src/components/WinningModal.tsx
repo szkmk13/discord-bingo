@@ -35,7 +35,7 @@ function WinningModal({ order }: { order: boolean[] }) {
           ref={textRef}
           className="whitespace-pre-line col-span-1 flex justify-center items-center"
         >
-          {textToCopy}
+          {/* {textToCopy} */}Już niedługo bingo metamiejskie
         </div>
         <button onClick={copyToClipboard} className="col-span-1">
           Copy to clipboard
